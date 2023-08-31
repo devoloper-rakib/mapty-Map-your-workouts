@@ -244,6 +244,7 @@ a:visited {
 .workout__edit:hover,
 .workout__delete:hover {
 	transform: scale(1.1);
+	transition: all 0.2s;
 }
 
 /* Point :  Responsive  style */

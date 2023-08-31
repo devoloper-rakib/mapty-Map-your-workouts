@@ -16,7 +16,6 @@ class Workout {
 	date = new Date();
 	id = (Date.now() + '').slice(-10); // Point : Unique id for each workout
 	clicks = 0;
-
 	// Point : Public properties
 	description;
 	distance;
@@ -100,8 +99,12 @@ class App {
 	#mapEvent;
 	#workouts = [];
 	#mapZoomLevel = 15;
+	marker;
+
 	constructor() {
 		this._getPosition();
+
+		this.workoutMarkers = {};
 
 		// Point :  Event handler for form Submit
 		form.addEventListener('submit', this._newWorkout.bind(this));
@@ -113,6 +116,21 @@ class App {
 
 		// Point : Get data from local storage
 		this._getLocalStorage();
+
+		// Point : Event handler for Edit and Delete Buttons
+		containerWorkouts.addEventListener(
+			'click',
+			function (e) {
+				if (e.target.classList.contains('workout__edit')) {
+					this._editWorkout(e);
+				}
+				if (e.target.classList.contains('workout__delete')) {
+					this._deleteWorkout(e);
+				}
+			}.bind(this),
+		);
+
+		// Point : Event handler for delete all workouts
 	}
 
 	// Point : For getting current location
@@ -203,9 +221,6 @@ class App {
 			// Point : Check if data is valid
 			if (
 				// point: guard clause
-				// !Number.isFinite(distance) ||
-				// !Number.isFinite(duration) ||
-				// !Number.isFinite(cadence)
 				!validInputs(distance, duration, cadence) ||
 				!allPositive(distance, duration, cadence)
 			)
@@ -244,8 +259,6 @@ class App {
 		this._setLocalStorage();
 
 		// Point : Display marker
-
-		// console.log(mapEvent);
 	}
 
 	_renderWorkoutMarker(workout) {
@@ -264,6 +277,8 @@ class App {
 				`${workout.type === 'running' ? '🏃‍♂️' : '🚴‍♀️'} ${workout.description}`,
 			)
 			.openPopup();
+
+		// Point : Display marker
 	}
 
 	_renderWorkout(workout) {
@@ -369,6 +384,74 @@ class App {
 	reset() {
 		localStorage.removeItem('workouts');
 		location.reload();
+	}
+
+	// Point : Edit workout
+
+	_editWorkout(e) {
+		e.preventDefault();
+
+		const workoutEl = e.target.closest('.workout');
+
+		if (!workoutEl) return; // Guard clause
+
+		const workout = this.#workouts.find(
+			(work) => work.id === workoutEl.dataset.id,
+		);
+
+		// Point : Show form
+		form.classList.remove('hidden');
+		inputType.value = workout.type;
+		inputDistance.value = workout.distance;
+		inputDuration.value = workout.duration;
+		inputCadence.value = workout.cadence || workout.pace;
+		inputElevation.value = workout.elevationGain || workout.speed;
+
+		// Point : Update workout
+		this._updateWorkoutMarkerPopup(workout);
+	}
+	_updateWorkoutMarkerPopup(workout) {
+		const marker = this.workoutMarkers[workout.id];
+		if (marker) {
+			marker.setPopupContent(
+				`${workout.type === 'running' ? '🏃‍♂️' : '🚴‍♀️'} ${workout.description}`,
+			);
+		}
+	}
+
+	// Point : Delete workout
+
+	_deleteWorkout(e) {
+		e.preventDefault();
+
+		const workoutEl = e.target.closest('.workout');
+
+		if (!workoutEl) return; // Guard clause
+
+		const workout = this.#workouts.find(
+			(work) => work.id === workoutEl.dataset.id,
+		);
+
+		// Point : Remove workout from array
+		const index = this.#workouts.indexOf(workout);
+		this.#workouts.splice(index, 1);
+
+		// Point : Remove workout from UI
+		workoutEl.remove();
+
+		// Point : Remove workout from the map
+		this._removeWorkoutMarker(workout);
+
+		// Point : Set local storage to all workouts
+		this._setLocalStorage();
+	}
+
+	_removeWorkoutMarker(workout) {
+		const marker = this.workoutMarkers[workout.id];
+		if (marker) {
+			this.#map.removeLayer(marker);
+			delete this.workoutMarkers[workout.id];
+		}
 	}
 }
 
