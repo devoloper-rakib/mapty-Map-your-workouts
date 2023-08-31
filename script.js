@@ -77,7 +77,6 @@ class Cycling extends Workout {
 		this.elevationGain = elevationGain;
 		this.calcSpeed();
 		this._setDescription();
-		// this.type = 'cycling';
 	}
 	// Point : Method for calculating speed
 	calcSpeed() {
@@ -271,7 +270,10 @@ class App {
 		let html = `
 	
 			 <li class="workout workout--${workout.type}" data-id="${workout.id}">
-          <h2 class="workout__title">${workout.description}</h2>
+          <h2 class="workout__title">${
+						workout.description
+					}  <button class="workout__edit">Edit</button>
+      <button class="workout__delete">Delete</button></h2> 
           <div class="workout__details">
             <span class="workout__icon">${
 							workout.type === 'running' ? '🏃‍♂️' : '🚴‍♀️'
@@ -283,7 +285,9 @@ class App {
             <span class="workout__icon">⏱</span>
             <span class="workout__value">${workout.duration}</span>
             <span class="workout__unit">min</span>
+
           </div>	
+		  
 		
 		`;
 
@@ -299,6 +303,7 @@ class App {
 			<span class="workout__value">${workout.cadence}</span>
 			<span class="workout__unit">spm</span>
 			</div>
+			
 			</li>
 			`;
 		}
