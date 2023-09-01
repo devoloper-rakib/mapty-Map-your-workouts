@@ -103,7 +103,6 @@ class App {
 
 	constructor() {
 		this._getPosition();
-
 		this.workoutMarkers = {};
 
 		// Point :  Event handler for form Submit
@@ -262,7 +261,7 @@ class App {
 	}
 
 	_renderWorkoutMarker(workout) {
-		L.marker(workout.coords)
+		const marker = L.marker(workout.coords)
 			.addTo(this.#map)
 			.bindPopup(
 				L.popup({
@@ -278,7 +277,8 @@ class App {
 			)
 			.openPopup();
 
-		// Point : Display marker
+		// Store the marker with the workout ID as the key
+		this.workoutMarkers[workout.id] = marker;
 	}
 
 	_renderWorkout(workout) {
@@ -408,50 +408,43 @@ class App {
 		inputElevation.value = workout.elevationGain || workout.speed;
 
 		// Point : Update workout
-		this._updateWorkoutMarkerPopup(workout);
-	}
-	_updateWorkoutMarkerPopup(workout) {
-		const marker = this.workoutMarkers[workout.id];
-		if (marker) {
-			marker.setPopupContent(
-				`${workout.type === 'running' ? '🏃‍♂️' : '🚴‍♀️'} ${workout.description}`,
-			);
-		}
+		// this._updateWorkoutMarkerPopup(workout);
 	}
 
 	// Point : Delete workout
+
+	_removeWorkoutMarker(id) {
+		const marker = this.workoutMarkers[id];
+		if (marker) {
+			marker.remove();
+			delete this.workoutMarkers[id];
+		}
+	}
 
 	_deleteWorkout(e) {
 		e.preventDefault();
 
 		const workoutEl = e.target.closest('.workout');
-
 		if (!workoutEl) return; // Guard clause
 
-		const workout = this.#workouts.find(
-			(work) => work.id === workoutEl.dataset.id,
+		const workoutId = workoutEl.dataset.id;
+		const workoutIndex = this.#workouts.findIndex(
+			(work) => work.id === workoutId,
 		);
 
-		// Point : Remove workout from array
-		const index = this.#workouts.indexOf(workout);
-		this.#workouts.splice(index, 1);
+		if (workoutIndex === -1) return; // Workout not found
 
-		// Point : Remove workout from UI
+		// Remove workout from array
+		this.#workouts.splice(workoutIndex, 1);
+
+		// Remove workout from UI
 		workoutEl.remove();
 
-		// Point : Remove workout from the map
-		this._removeWorkoutMarker(workout);
+		// Remove workout marker from the map
+		this._removeWorkoutMarker(workoutId);
 
-		// Point : Set local storage to all workouts
+		// Set local storage to all workouts
 		this._setLocalStorage();
-	}
-
-	_removeWorkoutMarker(workout) {
-		const marker = this.workoutMarkers[workout.id];
-		if (marker) {
-			this.#map.removeLayer(marker);
-			delete this.workoutMarkers[workout.id];
-		}
 	}
 }
 
