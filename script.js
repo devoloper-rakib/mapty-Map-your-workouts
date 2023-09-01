@@ -452,3 +452,21 @@ class App {
 const app = new App();
 // app._getPosition();
 // app.reset()
+
+// Creating and inserting elements
+const message = document.createElement('div');
+const body = document.querySelector('body');
+message.classList.add('cookie-message');
+
+message.innerHTML =
+	'We use cookied for improved functionality and analytics. <button class="btn btn--close-cookie">Got it!</button>';
+
+message.style.backgroundColor = '#2D3439';
+message.style.width = '120%';
+body.append(message);
+
+// Delete elements
+
+document.querySelector('.btn--close-cookie').addEventListener('click', () => {
+	message.remove();
+});
