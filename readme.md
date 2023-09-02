@@ -52,12 +52,7 @@ Before you begin, ensure you have met the following requirements:
 1. Open the project folder in your code editor.
    cd mapty
 
-```
-
-
-```
-
-2. Open index.html in your web browser to run the application.
+1. Open index.html in your web browser to run the application.
 
 ### Usage
 
