@@ -120,6 +120,9 @@ class App {
 		// Point : Get data from local storage
 		this._getLocalStorage();
 
+		// Point Delete all button visibility
+		this.updateDeleteAllButtonVisibility();
+
 		// Point : Event handler for Edit and Delete Buttons
 		containerWorkouts.addEventListener(
 			'click',
@@ -265,6 +268,9 @@ class App {
 
 			// Point : Set local storage to all workouts
 			this._setLocalStorage();
+
+			// Point Delete all button visibility
+			this.updateDeleteAllButtonVisibility();
 		}
 
 		// Point : Display marker
@@ -534,6 +540,9 @@ class App {
 
 		// Set local storage to all workouts
 		this._setLocalStorage();
+
+		// Point Delete all button visibility
+		this.updateDeleteAllButtonVisibility();
 	}
 
 	// Point : Delete all workouts
@@ -553,8 +562,19 @@ class App {
 			// Remove all workout elements from the UI
 			const workoutElements = document.querySelectorAll('.workout');
 			workoutElements.forEach((element) => element.remove());
+
+			// Point Delete all button visibility
+			this.updateDeleteAllButtonVisibility();
 		} else {
 			console.log('Delete all workouts cancelled.');
+		}
+	}
+	// Point : Showing Delete All button only when there are more than 2 workouts
+	updateDeleteAllButtonVisibility() {
+		if (this.#workouts.length >= 2) {
+			btnDeleteAll.style.display = 'block'; // Show the button
+		} else {
+			btnDeleteAll.style.display = 'none'; // Hide the button
 		}
 	}
 }
