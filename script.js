@@ -202,44 +202,41 @@ class App {
 	// Point : Method for adding workout and editing workout and updating it==>
 
 	_newWorkout(e) {
+		e.preventDefault();
+
 		const validInputs = (...inputs) =>
 			inputs.every((inp) => Number.isFinite(inp));
 
 		const allPositive = (...inputs) => inputs.every((inp) => inp > 0);
 
-		e.preventDefault();
+		// Get the selected workout type from the <select> element
+		const workoutType = document.querySelector('.form__input--type').value;
 
-		// Point : Get data from form
-		const type = inputType.value;
 		const distance = +inputDistance.value;
 		const duration = +inputDuration.value;
 		const { lat, lng } = this.#mapEvent.latlng;
 		let workout;
 
-		// Point : If workout running, create running object
-
-		if (type === 'running') {
+		if (workoutType === 'running') {
 			const cadence = +inputCadence.value;
-			// Point : Check if data is valid
+
 			if (
-				// point: guard clause
 				!validInputs(distance, duration, cadence) ||
 				!allPositive(distance, duration, cadence)
 			)
-				return alert('Are You Dumb 🤔 enter a positive number');
+				return alert('Please enter valid positive numbers.');
 
 			workout = new Running([lat, lng], distance, duration, cadence);
 		}
 
-		// Point : If workout cycling, create cycling object
-		if (type === 'cycling') {
+		if (workoutType === 'cycling') {
 			const elevation = +inputElevation.value;
 
 			if (
 				!validInputs(distance, duration, elevation) ||
 				!allPositive(distance, duration)
 			)
-				return alert('Are You Dumb 🤔 enter a positive number');
+				return alert('Please enter valid positive numbers.');
 
 			workout = new Cycling([lat, lng], distance, duration, elevation);
 		}
@@ -247,24 +244,21 @@ class App {
 		if (this.#editWorkout) {
 			this._updateWorkout();
 		} else {
-			// Point : Add new object to workout array
-
+			// Add new object to workout array
 			this.#workouts.push(workout);
 
-			// Point : Render workout on map as marker
+			// Render workout on map as a marker
 			this._renderWorkoutMarker(workout);
 
-			// Point : Render workout on list
+			// Render workout on list
 			this._renderWorkout(workout);
 
-			// Point : Hide form + clear input fields
+			// Hide form + clear input fields
 			this._hideForm();
 
-			// Point : Set local storage to all workouts
+			// Set local storage for all workouts
 			this._setLocalStorage();
 		}
-
-		// Point : Display marker
 	}
 
 	_renderWorkoutMarker(workout) {
