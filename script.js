@@ -8,9 +8,11 @@ const inputDistance = document.querySelector('.form__input--distance');
 const inputDuration = document.querySelector('.form__input--duration');
 const inputCadence = document.querySelector('.form__input--cadence');
 const inputElevation = document.querySelector('.form__input--elevation');
+const btnDeleteAll = document.querySelector('.btn-delete');
+
+// /////////////////////////////////////////////////////////////////////////////
 
 // Point : Class Workout
-
 class Workout {
 	// Point : Private properties
 	date = new Date();
@@ -132,6 +134,7 @@ class App {
 		);
 
 		// Point : Event handler for delete all workouts
+		btnDeleteAll.addEventListener('click', this._deleteAllWorkouts.bind(this));
 	}
 
 	// Point : For getting current location
@@ -531,6 +534,28 @@ class App {
 
 		// Set local storage to all workouts
 		this._setLocalStorage();
+	}
+
+	// Point : Delete all workouts
+	_deleteAllWorkouts() {
+		if (confirm('Are you sure you want to delete all workouts?')) {
+			// Clear the workouts array
+			this.#workouts = [];
+
+			// Remove all workout markers from the map
+			for (const id in this.workoutMarkers) {
+				this._removeWorkoutMarker(id);
+			}
+
+			// Clear the local storage
+			this._setLocalStorage();
+
+			// Remove all workout elements from the UI
+			const workoutElements = document.querySelectorAll('.workout');
+			workoutElements.forEach((element) => element.remove());
+		} else {
+			console.log('Delete all workouts cancelled.');
+		}
 	}
 }
 
