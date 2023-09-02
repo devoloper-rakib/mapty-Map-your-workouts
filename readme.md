@@ -54,7 +54,7 @@ Before you begin, ensure you have met the following requirements:
 
 1. Open index.html in your web browser to run the application.
 
-### Usage
+## Usage
 
 1. Open the application in your web browser.
 2. Click on the map to add a new workout.
@@ -62,7 +62,7 @@ Before you begin, ensure you have met the following requirements:
 4. Click the "Enter" button to save/update the workout.
 5. Your workout will appear on the map and in the list on the left.
 
-### Contributing
+## Contributing
 
 Contributions are what make the open-source community such an amazing place to be learn, inspire, and create. Any contributions you make are greatly appreciated.
 
