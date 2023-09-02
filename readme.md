@@ -14,7 +14,9 @@ Mapty is a web application that allows you to track and record your workouts usi
 
 ## Demo
 
-You can check out a live demo of Mapty [here](https://devoloper-rakib.github.io/mapty-Map-your-workouts/).
+You can check out a live demo of Mapty [](https://devoloper-rakib.github.io/mapty-Map-your-workouts/).
+
+<a href="https://devoloper-rakib.github.io/mapty-Map-your-workouts/" target="_blank">Open Demo</a>
 
 ## Features
 
